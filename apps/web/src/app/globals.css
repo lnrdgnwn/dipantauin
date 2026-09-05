@@ -1,26 +1,214 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-heading: var(--font-inter), ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+
+  /* Vercel Design Colors */
+  --color-canvas: var(--canvas);
+  --color-canvas-soft: var(--canvas-soft);
+  --color-ink: var(--ink);
+  --color-hairline: var(--hairline);
+  --color-mute: var(--mute);
+  --color-body-text: var(--body-text);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: 6px; /* Vercel rounded-sm */
+  --radius-md: 8px; /* Vercel rounded-md */
+  --radius-lg: 12px; /* Vercel rounded-lg */
+  --radius-xl: 16px;
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-pill: 100px; /* Vercel pill shape */
+
+  /* Vercel Shadows */
+  --shadow-level-1: 0 0 0 1px #00000014;
+  --shadow-level-2: 0px 1px 1px #00000005, 0px 2px 2px #0000000a, 0 0 0 1px #00000014;
+  --shadow-level-3: 0px 2px 2px #0000000a, 0px 8px 8px -8px #0000000a, 0 0 0 1px #00000014;
+  --shadow-level-4: 0px 2px 2px #0000000a, 0px 8px 16px -4px #0000000a, 0 0 0 1px #00000014;
+  --shadow-level-5: 0px 1px 1px #00000005, 0px 8px 16px -4px #0000000a, 0px 24px 32px -8px #0000000f, 0 0 0 1px #00000014;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Vercel Light Mode Values */
+  --canvas: #ffffff;
+  --canvas-soft: #fafafa;
+  --ink: #171717;
+  --hairline: #ebebeb;
+  --mute: #888888;
+  --body-text: #4d4d4d;
+
+  /* Modifying shadcn to use Vercel colors */
+  --background: var(--canvas-soft); /* Page body uses canvas-soft */
+  --foreground: var(--ink);
+
+  --card: var(--canvas);
+  --card-foreground: var(--ink);
+  --popover: var(--canvas);
+  --popover-foreground: var(--ink);
+
+  --primary: var(--ink); /* CTA is ink */
+  --primary-foreground: #ffffff; /* on-primary is white */
+
+  --secondary: var(--canvas);
+  --secondary-foreground: var(--ink);
+
+  --muted: #f5f5f5; /* canvas-soft-2 */
+  --muted-foreground: var(--mute);
+
+  --accent: #f5f5f5;
+  --accent-foreground: var(--ink);
+
+  --destructive: #ee0000;
+  --destructive-foreground: #ffffff;
+
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: #a1a1a1;
+
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+
+  --radius: 6px;
+
+  --sidebar: var(--canvas);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ink);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--ring);
+}
+
+.dark {
+  /* For dark mode, polarity-flip vercel colors */
+  --canvas: #000000;
+  --canvas-soft: #111111;
+  --ink: #ededed;
+  --hairline: #333333;
+  --mute: #888888;
+  --body-text: #a1a1a1;
+
+  --background: var(--canvas-soft);
+  --foreground: var(--ink);
+
+  --card: var(--canvas);
+  --card-foreground: var(--ink);
+  --popover: var(--canvas);
+  --popover-foreground: var(--ink);
+
+  --primary: var(--ink);
+  --primary-foreground: #000000;
+
+  --secondary: var(--canvas);
+  --secondary-foreground: var(--ink);
+
+  --muted: #1a1a1a;
+  --muted-foreground: var(--mute);
+
+  --accent: #1a1a1a;
+  --accent-foreground: var(--ink);
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: var(--hairline);
+  --input: var(--hairline);
+  --ring: oklch(0.556 0 0);
+
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+
+  --sidebar: var(--canvas);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--ink);
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .display-lg {
+    @apply text-[32px] font-semibold leading-[40px] tracking-[-1.28px];
+  }
+  .display-md {
+    @apply text-[24px] font-semibold leading-[32px] tracking-[-0.96px];
+  }
+  .body-lg {
+    @apply text-[18px] font-normal leading-[28px] tracking-normal;
+  }
+  .body-md {
+    @apply text-[16px] font-normal leading-[24px];
+  }
+  .body-md-strong {
+    @apply text-[16px] font-medium leading-[24px];
+  }
+  .body-sm {
+    @apply text-[14px] font-normal leading-[20px] tracking-[-0.28px];
+  }
+  .body-sm-strong {
+    @apply text-[14px] font-medium leading-[20px] tracking-[-0.28px];
+  }
+  .caption-mono {
+    @apply font-mono text-[12px] font-normal leading-[16px];
+  }
 }
