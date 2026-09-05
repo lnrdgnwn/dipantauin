@@ -1,9 +1,14 @@
 import { ProductTracker } from "./product-tracker";
 import { TokopediaTracker } from "./tokopedia-tracker";
+import { ShopeeTracker } from "./shopee-tracker";
+import { BlibliTracker } from "./blibli-tracker";
+export type { Marketplace, Availability, TrackedProduct } from "./product-tracker";
+export { TrackerError } from "./product-tracker";
 
 const trackers: ProductTracker[] = [
   new TokopediaTracker(),
-  // Add new trackers here
+  new ShopeeTracker(),
+  new BlibliTracker(),
 ];
 
 export function getTracker(url: string): ProductTracker {
