@@ -8,7 +8,6 @@ const workerEnvSchema = z.object({
     .enum(["development", "production", "test"])
     .default("development"),
   DATABASE_URL: z.string().url().optional(),
-  WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(20).default(5),
 });
 
 const parsed = workerEnvSchema.safeParse(process.env);

@@ -2,10 +2,8 @@ import { prisma } from "@dipantauin/prisma";
 import { Prisma } from "@prisma/client";
 import { getTracker } from "../trackers";
 import { isValidHttpUrl } from "../trackers/product-tracker";
-import { workerEnv } from "../config/env";
 
-// Configurable concurrency limit (from env or default to 5)
-const CONCURRENCY_LIMIT = workerEnv.WORKER_CONCURRENCY;
+const CONCURRENCY_LIMIT = 5;
 
 // Plan interval lookup: planCode -> checkIntervalMin (fetched from DB at runtime)
 type PlanIntervalMap = Record<string, number>;
