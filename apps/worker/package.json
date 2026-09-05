@@ -1,26 +1,37 @@
 {
     "name": "@dipantauin/worker",
     "version": "1.0.0",
-    "main": "src/index.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        "./trackers": {
+            "types": "./src/trackers/index.ts",
+            "default": "./dist/trackers/index.js"
+        }
+    },
     "scripts": {
         "dev": "tsx watch src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
-        "@dipantauin/api": "*",
         "@dipantauin/prisma": "*",
         "axios": "^1.6.0",
         "cheerio": "^1.0.0-rc.12",
-        "node-cron": "^3.0.3",
-        "zod": "^3.22.4",
-        "dotenv": "^16.3.1"
+        "dotenv": "^16.3.1",
+        "node-cron": "^4.6.0",
+        "zod": "^3.22.4"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",
         "@types/node-cron": "^3.0.11",
+        "@vitest/coverage-v8": "^4.1.11",
         "tsx": "^4.0.0",
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
+        "vitest": "^4.1.11"
     }
 }

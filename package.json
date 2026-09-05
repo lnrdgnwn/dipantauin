@@ -11,7 +11,11 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "test:coverage": "turbo test:coverage",
+    "db:validate": "npm run db:validate -w @dipantauin/prisma",
+    "check": "npm run lint && npm run typecheck && npm run db:validate"
   },
   "keywords": [],
   "author": "",
