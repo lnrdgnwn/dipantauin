@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ProductsController } from "./products.controller";
-import { requireAuth } from "../../middlewares/auth.middleware";
+import { requireAdmin, requireAuth } from "../../middlewares/auth.middleware";
 import priceHistoryRoutes from "../price-history/price-history.route";
 
 const router = Router();
@@ -12,7 +12,7 @@ router.post("/preview", ProductsController.preview);
 router.post("/", ProductsController.addProduct);
 router.get("/", ProductsController.getProducts);
 router.get("/:id", ProductsController.getProductById);
-router.delete("/:id", ProductsController.deleteProduct);
+router.delete("/:id", requireAdmin, ProductsController.deleteProduct);
 
 // Nested route for price history
 router.use("/:id/price-history", priceHistoryRoutes);

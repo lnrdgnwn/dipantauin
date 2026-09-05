@@ -1,14 +1,20 @@
-import { Request, Response, NextFunction } from "express";
-import { PriceHistoryService } from "./price-history.service";
+import { Response, NextFunction } from "express";
+import { historyQuerySchema, PriceHistoryService } from "./price-history.service";
+import { AuthRequest } from "../../middlewares/auth.middleware";
+import { idSchema } from "../../utils/validation";
 
 export class PriceHistoryController {
-  static async getHistory(req: Request, res: Response, next: NextFunction) {
+  static async getHistory(req: AuthRequest, res: Response, next: NextFunction) {
     try {
-      const id = req.params.id as string;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
-      
-      const result = await PriceHistoryService.getHistoryByProductId(id, limit);
-      
+      const id = idSchema.parse(req.params.id);
+      const query = historyQuerySchema.parse(req.query);
+
+      const result = await PriceHistoryService.getHistoryByProductId(
+        req.user!.userId,
+        id,
+        query,
+      );
+
       res.json({
         success: true,
         data: result,
