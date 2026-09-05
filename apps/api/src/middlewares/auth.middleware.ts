@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt";
-import { prisma } from "@dipantauin/prisma";
+import { AuthRepository } from "../modules/auth/auth.repository";
 
 export interface AuthRequest extends Request {
   user?: {
@@ -11,18 +11,23 @@ export interface AuthRequest extends Request {
 export const requireAuth = (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  const authHeader = req.headers.authorization;
+  let token = "";
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
+  } else if (req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  }
+
+  if (!token) {
     return res.status(401).json({
       success: false,
       message: "Unauthorized",
     });
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
     const payload = verifyToken(token);
@@ -39,17 +44,14 @@ export const requireAuth = (
 export const requireAdmin = async (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // First ensure the user is authenticated
   requireAuth(req, res, async () => {
     try {
-      const user = await prisma.user.findUnique({
-        where: { id: req.user!.userId },
-        select: { role: true },
-      });
+      const user = await AuthRepository.findUserRole(req.user!.userId);
 
-      if (!user || user.role !== "ADMIN") {
+      if (!user || user.role !== "ADMIN" || user.status !== "ACTIVE") {
         return res.status(403).json({
           success: false,
           message: "Forbidden: Admin access required",
@@ -58,10 +60,7 @@ export const requireAdmin = async (
 
       next();
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: "Internal server error while checking permissions",
-      });
+      next(error);
     }
   });
 };
