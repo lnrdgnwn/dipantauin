@@ -48,6 +48,9 @@ jobs:
       - name: Test with coverage
         run: npm run test:coverage
 
+      - name: Build worker
+        run: npm run build -w @dipantauin/worker
+
       - name: Build monorepo
         run: npm run build
 
