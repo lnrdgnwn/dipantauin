@@ -345,18 +345,23 @@ Workflow GitHub Actions memakai Node.js 22. Job publish hanya berjalan setelah v
 CI dikonfigurasi untuk membangun dan mendorong **image API saja** ke:
 
 ```text
-ghcr.io/<repository-owner>/dipantauin-api
+ghcr.io/lnrdgnwn/dipantauin-api
 ```
 
-Tag dapat berupa `latest` pada default branch, branch, commit SHA, atau versi semantik. Konfigurasi workflow tidak dengan sendirinya menjamin image bersifat public atau sudah tersedia; periksa halaman Packages repository dan lakukan `docker login ghcr.io` bila package private.
+Pull image
+Untuk mengambil image API dari GHCR:
+```bash
+docker pull ghcr.io/lnrdgnwn/dipantauin-api:latest
+```
 
 Untuk memakai image yang sudah tersedia melalui Compose:
-
 ```bash
 API_IMAGE=ghcr.io/<repository-owner>/dipantauin-api:<tag> docker compose up -d
 ```
 
-Web dan worker tetap dibangun lokal kecuali `WEB_IMAGE` atau `WORKER_IMAGE` juga diarahkan ke image yang dikelola sendiri.
+docker-compose.yml dapat menggunakan image API yang telah dipublikasikan ke GHCR melalui environment variable API_IMAGE:
+
+Nantinya Web dan worker tetap dibangun lokal kecuali `WEB_IMAGE` atau `WORKER_IMAGE` juga diarahkan ke image yang dikelola sendiri.
 
 ## 🔒 Security
 
