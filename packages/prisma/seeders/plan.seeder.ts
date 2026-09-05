@@ -5,7 +5,14 @@ export async function seedPlans() {
     where: {
       code: "FREE",
     },
-    update: {},
+    update: {
+      name: "Free",
+      price: 0,
+      currency: "IDR",
+      maxProducts: 3,
+      checkIntervalMin: 1440,
+      isActive: true,
+    },
     create: {
       code: "FREE",
       name: "Free",
@@ -21,7 +28,14 @@ export async function seedPlans() {
     where: {
       code: "PRO",
     },
-    update: {},
+    update: {
+      name: "Pro",
+      price: 49000,
+      currency: "IDR",
+      maxProducts: 25,
+      checkIntervalMin: 60,
+      isActive: true,
+    },
     create: {
       code: "PRO",
       name: "Pro",

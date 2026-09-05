@@ -64,18 +64,17 @@ enum NotificationType {
   SYSTEM
 }
 
-
 // ======================================================
 // USERS
 // ======================================================
 
 model User {
-  id            String     @id @default(uuid()) @db.Char(36)
-  email         String     @unique @db.VarChar(255)
-  name          String?    @db.VarChar(255)
-  passwordHash  String     @db.VarChar(255)
-  role          UserRole   @default(USER)
-  status        UserStatus @default(ACTIVE)
+  id           String     @id @default(uuid()) @db.Char(36)
+  email        String     @unique @db.VarChar(255)
+  name         String?    @db.VarChar(255)
+  passwordHash String     @db.VarChar(255)
+  role         UserRole   @default(USER)
+  status       UserStatus @default(ACTIVE)
 
   isVerified                Boolean   @default(false)
   verificationCode          String?   @db.VarChar(10)
@@ -114,7 +113,6 @@ model RefreshToken {
 
   @@index([userId])
   @@index([expiresAt])
-
   @@map("refresh_tokens")
 }
 
@@ -123,26 +121,25 @@ model RefreshToken {
 // ======================================================
 
 model Plan {
-  id               String   @id @default(uuid()) @db.Char(36)
-  code             String   @unique @db.VarChar(50)
-  name             String   @db.VarChar(100)
+  id   String @id @default(uuid()) @db.Char(36)
+  code String @unique @db.VarChar(50)
+  name String @db.VarChar(100)
 
-  price            Decimal  @db.Decimal(12, 2)
-  currency         String   @default("IDR") @db.Char(3)
+  price    Decimal @db.Decimal(12, 2)
+  currency String  @default("IDR") @db.Char(3)
 
   maxProducts      Int
   checkIntervalMin Int
 
-  isActive         Boolean  @default(true)
+  isActive Boolean @default(true)
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   subscriptions Subscription[]
 
   @@map("plans")
 }
-
 
 // ======================================================
 // SUBSCRIPTIONS
@@ -175,10 +172,8 @@ model Subscription {
   @@index([planId])
   @@index([status])
   @@index([currentPeriodEnd])
-
   @@map("subscriptions")
 }
-
 
 // ======================================================
 // PAYMENTS
@@ -193,8 +188,8 @@ model Payment {
   amount   Decimal @db.Decimal(12, 2)
   currency String  @default("IDR") @db.Char(3)
 
-  provider                String @db.VarChar(50)
-  providerTransactionId   String @db.VarChar(255)
+  provider              String @db.VarChar(50)
+  providerTransactionId String @db.VarChar(255)
 
   status PaymentStatus @default(PENDING)
 
@@ -202,22 +197,20 @@ model Payment {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  user User @relation(fields: [userId],references: [id],onDelete: Restrict)
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
 
-  subscription Subscription? @relation(fields: [subscriptionId],references: [id],onDelete: SetNull)
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 
   events PaymentEvent[]
 
   @@unique([provider, providerTransactionId])
-
   @@index([userId])
+  @@index([userId, createdAt])
   @@index([subscriptionId])
   @@index([status])
   @@index([createdAt])
-
   @@map("payments")
 }
-
 
 // ======================================================
 // PAYMENT EVENTS
@@ -238,15 +231,13 @@ model PaymentEvent {
 
   createdAt DateTime @default(now())
 
-  payment Payment @relation(fields: [paymentId],references: [id],onDelete: Cascade)
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
   @@index([paymentId])
   @@index([status])
   @@index([createdAt])
-
   @@map("payment_events")
 }
-
 
 // ======================================================
 // PRODUCTS
@@ -255,17 +246,20 @@ model PaymentEvent {
 model Product {
   id String @id @default(uuid()) @db.Char(36)
 
-  platform           String  @db.VarChar(50)
-  externalProductId  String? @db.VarChar(255)
+  platform          String  @db.VarChar(50)
+  externalProductId String? @db.VarChar(255)
 
-  url          String @db.Text
+  url          String  @db.Text
   canonicalUrl String? @db.Text
 
   name       String  @db.Text
   sellerName String? @db.VarChar(255)
+  imageUrl   String? @db.Text
 
-  currency     String  @default("IDR") @db.Char(3)
-  currentPrice Decimal @db.Decimal(15, 2)
+  currency      String   @default("IDR") @db.Char(3)
+  currentPrice  Decimal  @db.Decimal(15, 2)
+  originalPrice Decimal? @db.Decimal(15, 2)
+  availability  String   @default("UNKNOWN") @db.VarChar(20)
 
   lastCheckedAt DateTime?
   nextCheckAt   DateTime?
@@ -280,15 +274,13 @@ model Product {
   priceChecks  PriceCheck[]
 
   @@unique([platform, externalProductId])
-  
   @@index([platform])
   @@index([nextCheckAt])
   @@index([status])
+  @@index([status, nextCheckAt])
   @@index([lastCheckedAt])
-
   @@map("products")
 }
-
 
 // ======================================================
 // USER PRODUCTS
@@ -310,9 +302,9 @@ model UserProduct {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   notifications Notification[]
 
@@ -320,10 +312,9 @@ model UserProduct {
   @@index([userId])
   @@index([productId])
   @@index([isActive])
-
+  @@index([userId, isActive, createdAt])
   @@map("user_products")
 }
-
 
 // ======================================================
 // PRICE HISTORY
@@ -334,19 +325,17 @@ model PriceHistory {
 
   productId String @db.Char(36)
 
-  price    Decimal  @db.Decimal(15, 2)
-  currency String   @default("IDR") @db.Char(3)
+  price    Decimal @db.Decimal(15, 2)
+  currency String  @default("IDR") @db.Char(3)
 
   checkedAt DateTime
 
-  product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId, checkedAt])
   @@index([checkedAt])
-
   @@map("price_history")
 }
-
 
 // ======================================================
 // PRICE CHECKS
@@ -362,20 +351,19 @@ model PriceCheck {
 
   status PriceCheckStatus
 
-  price       Decimal? @db.Decimal(15, 2)
-  errorMessage String? @db.Text
+  price        Decimal? @db.Decimal(15, 2)
+  errorMessage String?  @db.Text
 
   createdAt DateTime @default(now())
 
-  product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@index([productId, createdAt])
   @@index([status])
   @@index([createdAt])
-
+  @@index([status, createdAt])
   @@map("price_checks")
 }
-
 
 // ======================================================
 // NOTIFICATIONS
@@ -388,10 +376,10 @@ model Notification {
   userProductId String @db.Char(36)
 
   type    NotificationType
-  title   String @db.VarChar(255)
-  message String @db.Text
+  title   String           @db.VarChar(255)
+  message String           @db.Text
 
-  isRead Boolean @default(false)
+  isRead Boolean   @default(false)
   sentAt DateTime?
 
   createdAt DateTime @default(now())
@@ -400,10 +388,9 @@ model Notification {
 
   userProduct UserProduct @relation(fields: [userProductId], references: [id], onDelete: Cascade)
 
-  @@index([userId, isRead])
+  @@index([userId, isRead, createdAt])
   @@index([userProductId])
   @@index([type])
   @@index([createdAt])
-
   @@map("notifications")
 }
