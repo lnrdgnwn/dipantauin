@@ -1,15 +1,12 @@
-﻿import { prisma } from "@dipantauin/prisma";
+﻿import { PlansRepository } from "./plans.repository";
 
 export class PlansService {
   static async getPlans() {
-    return prisma.plan.findMany({
-      where: { isActive: true },
-      orderBy: { price: "asc" },
-    });
+    return PlansRepository.findActive();
   }
 
   static async getPlanById(id: string) {
-    const plan = await prisma.plan.findUnique({ where: { id } });
+    const plan = await PlansRepository.findById(id);
     if (!plan) {
       throw { statusCode: 404, message: "Plan not found" };
     }

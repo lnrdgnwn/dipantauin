@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { PlansService } from "./plans.service";
+import { idSchema } from "../../utils/validation";
 
 export class PlansController {
   static async getPlans(_req: Request, res: Response, next: NextFunction) {
@@ -13,7 +14,9 @@ export class PlansController {
 
   static async getPlanById(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await PlansService.getPlanById(req.params.id as string);
+      const result = await PlansService.getPlanById(
+        idSchema.parse(req.params.id),
+      );
       res.json({ success: true, data: result });
     } catch (error) {
       next(error);
